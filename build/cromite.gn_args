@@ -8,7 +8,6 @@ debuggable_apks=false
 dfmify_dev_ui=false
 disable_android_lint=true
 disable_fieldtrial_testing_config=true
-enable_gvr_services=false
 enable_hangout_services_extension=false
 enable_iterator_debugging=false
 enable_mdns=false
@@ -23,16 +22,14 @@ is_debug=false
 is_official_build=true
 rtc_build_examples=false
 symbol_level=1
-treat_warnings_as_errors=true
+treat_warnings_as_errors=false
 use_debug_fission=true
 use_errorprone_java_compiler=false
 use_official_google_api_keys=false
 use_rtti=false
 use_sysroot=false
-webview_includes_weblayer=false
 enable_arcore=false
 enable_openxr=false
-enable_gvr_services=false
 enable_feed_v2=false
 enable_cardboard=false
 is_high_end_android=true
@@ -71,7 +68,6 @@ if (target_os == "android" || target_os == "win") {
 
 # disable passthrough audio codecs
 enable_platform_dts_audio = false
-enable_passthrough_audio_codecs = false
 
 # Do not compile libmonochrome.so with RELR relocations
 # since supported only on API 28+
@@ -86,7 +82,7 @@ enable_jxl_decoder = true
 
 # disable minikin engine
 # see https://github.com/uazo/cromite/issues/697
-use_minikin_hyphenation = false
+#use_minikin_hyphenation = false
 
 # disable automatic update of sync-related cookies
 # initial commit: https://source.chromium.org/chromium/chromium/src/+/fd9a841f7a63b9f5510f6b713d9c833d259c63ad
@@ -107,17 +103,9 @@ if (target_os == "android") {
   target_os = "android" # fix traffic annotation auditor
   #enable_kythe_annotations = true
 
-  chrome_public_manifest_package = "org.cromite.cromite"
-  system_webview_package_name="org.cromite.webview" #"com.android.webview"
-  system_webview_shell_package_name="org.cromite.webview_shell"
-
-  if (getenv("USE_KEYSTORE") != "") {
-    android_keystore_path = "/home/lg/working_dir/cromite.keystore"
-    android_keystore_name = "cromite"
-    android_keystore_password = getenv("KEYSTORE_PASSWORD")
-  }
-
-  cromite_pref_hash_seed_bin = getenv("CROMITE_PREF_HASH_SEED_BIN")
+  chrome_public_manifest_package = "org.omnirom.chromium"
+  system_webview_package_name="com.android.webview"
+  system_webview_shell_package_name="com.android.webview_shell"
 
   _is_debug_build = getenv("TARGET_ISDEBUG")
   if(_is_debug_build == "true") {
@@ -136,35 +124,4 @@ if (target_os == "android") {
     # only 64bit
     skip_secondary_abi_for_cq = true
   }
-}
-
-if (target_os == "win") {
-  target_os = "win" # fix traffic annotation auditor
-  target_cpu = "x64"
-  symbol_level = 0
-  use_large_pdbs = true
-
-  enable_pdf = true
-  pdf_is_complete_lib = true
-  enable_plugins = true
-  enable_ppapi = false
-
-  chrome_pgo_phase = 2 # enable pgo
-
-  is_cfi = false # disable it
-  use_cfi_cast = false # disable it
-}
-
-if (target_os == "linux") {
-  target_os = "linux" # fix traffic annotation auditor
-  target_cpu = "x64"
-  symbol_level = 0
-
-  enable_pdf = true
-  pdf_is_complete_lib = true
-  enable_plugins = true
-  enable_ppapi = false
-
-  use_sysroot = true
-  chrome_pgo_phase = 2 # enable pgo
 }

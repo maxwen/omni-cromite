@@ -53,7 +53,7 @@ diff --git a/chrome/android/java/res/layout/fre_tosanduma.xml b/chrome/android/j
 new file mode 100644
 --- /dev/null
 +++ b/chrome/android/java/res/layout/fre_tosanduma.xml
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,152 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<!--
 +Copyright 2015 The Chromium Authors
@@ -141,14 +141,6 @@ new file mode 100644
 +                        android:lineSpacingMultiplier="1.4"
 +                        android:textAppearance="@style/TextAppearance.TextMedium.Primary" />
 +
-+                    <CheckBox
-+                        android:id="@+id/auto_updater_checkbox"
-+                        android:layout_width="wrap_content"
-+                        android:layout_height="wrap_content"
-+                        android:lineSpacingMultiplier="1.4"
-+                        android:text="@string/auto_updater_check"
-+                        android:paddingStart="@dimen/fre_tos_checkbox_padding"
-+                        android:textAppearance="@style/TextAppearance.TextMedium.Primary" />
 +                </LinearLayout>
 +
 +                <include
@@ -231,7 +223,7 @@ diff --git a/chrome/android/java/res/values/dimens.xml b/chrome/android/java/res
 +    <dimen name="fre_button_vertical_margin">24dp</dimen>
 +    <dimen name="fre_landscape_top_padding">72dp</dimen>
 +    <dimen name="fre_button_vertical_margin_small">16dp</dimen>
- 
+
      <!-- Account Signin dimensions -->
      <!-- The Account Signin page appears in the First Run Experience (amongst other places), so uses
 diff --git a/chrome/android/java/res/values/styles.xml b/chrome/android/java/res/values/styles.xml
@@ -240,7 +232,7 @@ diff --git a/chrome/android/java/res/values/styles.xml b/chrome/android/java/res
 @@ -270,6 +270,30 @@ found in the LICENSE file.
          <item name="android:layout_weight">1</item>
      </style>
- 
+
 +    <!-- First Run Experience -->
 +    <!-- Avoid using @font/accent_font, a downloaded font, on text that could appear in the first
 +         couple of frames of app start. It may not be ready yet, see https://crbug.com/1119990 -->
@@ -276,7 +268,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/ChildA
  import org.chromium.base.supplier.OneshotSupplierImpl;
  import org.chromium.components.signin.AccountManagerFacade;
 -import org.chromium.components.signin.AccountUtils;
- 
+
  /**
   * Fetches the child account status to be used by other FRE components.
 @@ -42,18 +41,6 @@ public class ChildAccountStatusSupplier implements OneshotSupplier<Boolean> {
@@ -296,14 +288,14 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/ChildA
 -                                    (isChild, account) -> onChildAccountStatusReady(isChild));
 -                        });
      }
- 
+
      @Override
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/DefaultSearchEngineFirstRunFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/DefaultSearchEngineFirstRunFragment.java
 --- a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/DefaultSearchEngineFirstRunFragment.java
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/DefaultSearchEngineFirstRunFragment.java
 @@ -51,15 +51,12 @@ public class DefaultSearchEngineFirstRunFragment extends Fragment implements Fir
          Profile profile = getPageDelegate().getProfileProviderSupplier().get().getOriginalProfile();
- 
+
          assert TemplateUrlServiceFactory.getForProfile(profile).isLoaded();
 -        mSearchEnginePromoDialogType = LocaleManager.getInstance().getSearchEnginePromoShowType();
 -        if (mSearchEnginePromoDialogType != SearchEnginePromoType.DONT_SHOW) {
@@ -314,7 +306,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/Defaul
                      mButton,
                      getPageDelegate()::advanceToNextPage);
 -        }
- 
+
          return rootView;
      }
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstRunActivity.java b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstRunActivity.java
@@ -344,13 +336,13 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
          // TODO(b/245912657): explicitly sign in supervised users in {@link
          // SigninFirstRunMediator#handleContinueWithNative} rather than relying on SigninChecker.
 -        SigninCheckerProvider.get(getProfileProviderSupplier().get().getOriginalProfile());
- 
+
          mFirstRunFlowSequencer.updateFirstRunProperties(mFreProperties);
- 
+
 @@ -158,20 +156,6 @@ public class FirstRunActivity extends FirstRunActivityBase implements FirstRunPa
              mFreProgressStates.add(MobileFreProgress.DEFAULT_SEARCH_ENGINE_SHOWN);
          }
- 
+
 -        // An optional sync consent page, the visibility of this page will be decided on the fly
 -        // according to the situation.
 -        if (ChromeFeatureList.isEnabled(
@@ -371,7 +363,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 @@ -522,11 +506,6 @@ public class FirstRunActivity extends FirstRunActivityBase implements FirstRunPa
      public void acceptTermsOfService(boolean allowMetricsAndCrashUploading) {
          assert mNativeInitializationPromise.isFulfilled();
- 
+
 -        // If default is true then it corresponds to opt-out and false corresponds to opt-in.
 -        UmaUtils.recordMetricsReportingDefaultOptIn(!DEFAULT_METRICS_AND_CRASH_REPORTING);
 -        RecordHistogram.recordMediumTimesHistogram(
@@ -389,7 +381,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
  import org.chromium.components.policy.PolicyService;
 -import org.chromium.components.signin.AccountManagerFacade;
 -import org.chromium.components.signin.AccountManagerFacadeProvider;
- 
+
  /** Base class for First Run Experience. */
  public abstract class FirstRunActivityBase extends AsyncInitializationActivity
 @@ -112,9 +110,7 @@ public abstract class FirstRunActivityBase extends AsyncInitializationActivity
@@ -400,7 +392,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -        mChildAccountStatusSupplier =
 -                new ChildAccountStatusSupplier(accountManagerFacade, mFirstRunAppRestrictionInfo);
 +        mChildAccountStatusSupplier = new ChildAccountStatusSupplier(null, null);
- 
+
          // TODO(crbug.com/1498708): Find the underlying issue causing the status bar not to be set
          //  during FRE, this is just a temporary visual fix.
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstRunFlowSequencer.java b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstRunFlowSequencer.java
@@ -418,11 +410,11 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -import org.chromium.components.signin.AccountManagerFacadeProvider;
 -import org.chromium.components.signin.identitymanager.ConsentLevel;
 -import org.chromium.components.signin.identitymanager.IdentityManager;
- 
+
  /**
   * A helper to determine what should be the sequence of First Run Experience screens, and whether
 @@ -63,41 +58,19 @@ public abstract class FirstRunFlowSequencer {
- 
+
          /** Returns true if the sync consent promo page should be shown. */
          boolean shouldShowSyncConsentPage(boolean isChild) {
 -            if (isChild) {
@@ -443,7 +435,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -            return identityManager.hasPrimaryAccount(ConsentLevel.SIGNIN);
 +            return false;
          }
- 
+
          /** @return true if the Search Engine promo page should be shown. */
          @VisibleForTesting
          public boolean shouldShowSearchEnginePage() {
@@ -453,7 +445,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -                    || searchPromoType == SearchEnginePromoType.SHOW_EXISTING;
 +            return true;
          }
- 
+
          /** @return true if Sync is allowed for the current user. */
          @VisibleForTesting
          protected boolean isSyncAllowed() {
@@ -465,7 +457,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 +            return false;
          }
      }
- 
+
 @@ -153,18 +126,8 @@ public abstract class FirstRunFlowSequencer {
       *                                  method.
       */
@@ -485,21 +477,21 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 +        mIsChild = false;
 +        maybeProcessFreEnvironmentPreNative();
      }
- 
+
      @VisibleForTesting
 @@ -183,14 +146,10 @@ public abstract class FirstRunFlowSequencer {
      }
- 
+
      private void maybeProcessFreEnvironmentPreNative() {
 -        // Wait till both child account status and the list of accounts are available.
 -        if (mIsChild == null || !mAccountsAvailable) return;
 -
          if (mIsFlowKnown) return;
          mIsFlowKnown = true;
- 
+
          Bundle freProperties = new Bundle();
 -        freProperties.putBoolean(SyncConsentFirstRunFragment.IS_CHILD_ACCOUNT, mIsChild);
- 
+
          onFlowIsKnown(freProperties);
      }
 @@ -201,6 +160,8 @@ public abstract class FirstRunFlowSequencer {
@@ -542,7 +534,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -import org.chromium.components.signin.AccountManagerFacadeProvider;
 -import org.chromium.components.signin.AccountUtils;
  import org.chromium.ui.accessibility.AccessibilityState;
- 
+
  /** Provides first run related utility functions. */
 @@ -85,16 +82,12 @@ public class FirstRunUtils {
       * @return Whether or not sync is allowed on this device.
@@ -551,7 +543,7 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -        return (hasGoogleAccountAuthenticator() && hasSyncPermissions()) || hasGoogleAccounts();
 +        return false;
      }
- 
+
      @VisibleForTesting
      static boolean hasGoogleAccountAuthenticator() {
 -        if (sHasGoogleAccountAuthenticator == null) {
@@ -561,10 +553,10 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -        return sHasGoogleAccountAuthenticator;
 +        return false;
      }
- 
+
      @VisibleForTesting
 @@ -104,9 +97,7 @@ public class FirstRunUtils {
- 
+
      @VisibleForTesting
      static boolean hasGoogleAccounts() {
 -        return !AccountUtils.getCoreAccountInfosIfFulfilledOrEmpty(
@@ -572,13 +564,13 @@ diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/FirstR
 -                .isEmpty();
 +        return false;
      }
- 
+
      @SuppressLint("InlinedApi")
 diff --git a/chrome/android/java/src/org/chromium/chrome/browser/firstrun/ToSAndUMAFirstRunFragment.java b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/ToSAndUMAFirstRunFragment.java
 new file mode 100644
 --- /dev/null
 +++ b/chrome/android/java/src/org/chromium/chrome/browser/firstrun/ToSAndUMAFirstRunFragment.java
-@@ -0,0 +1,335 @@
+@@ -0,0 +1,315 @@
 +// Copyright 2015 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -644,8 +636,6 @@ new file mode 100644
 +    private boolean mUserInteractedWithUmaCheckbox;
 +
 +    private Button mAcceptButton;
-+    private CheckBox mAutoUpdaterCheckBox;
-+    private boolean mAutoUpdaterChecked;
 +    private TextView mTosAndPrivacy;
 +    private View mTitle;
 +    private View mProgressSpinner;
@@ -672,15 +662,10 @@ new file mode 100644
 +        mProgressSpinner = view.findViewById(R.id.progress_spinner);
 +        mProgressSpinner.setVisibility(View.GONE);
 +        mAcceptButton = (Button) view.findViewById(R.id.terms_accept);
-+        mAutoUpdaterCheckBox = (CheckBox) view.findViewById(R.id.auto_updater_checkbox);
 +        mTosAndPrivacy = (TextView) view.findViewById(R.id.tos_and_privacy);
 +
 +        // Register event listeners.
 +        mAcceptButton.setOnClickListener((v) -> onTosButtonClicked());
-+        mAutoUpdaterCheckBox.setOnCheckedChangeListener(
-+                ((compoundButton, isChecked) -> {
-+            mAutoUpdaterChecked = isChecked;
-+        }));
 +
 +        // Make TextView links clickable.
 +        mTosAndPrivacy.setMovementMethod(LinkMovementMethod.getInstance());
@@ -724,7 +709,6 @@ new file mode 100644
 +            // On certain versions of Android, the checkbox will appear unchecked upon revisiting
 +            // the page.  Force it to the end state of the drawable animation as a work around.
 +            // crbug.com/666258
-+            mAutoUpdaterCheckBox.jumpDrawablesToCurrentState();
 +        }
 +    }
 +
@@ -751,7 +735,6 @@ new file mode 100644
 +        assert !isWaitingForNativeAndPolicyInit();
 +
 +        setSpinnerVisible(false);
-+        mAutoUpdaterCheckBox.setChecked(true);
 +    }
 +
 +    private void updateView() {
@@ -782,17 +765,12 @@ new file mode 100644
 +
 +        spans.add(buildPrivacyPolicyLink("2", R.string.adblock_updater_privacy_policy_url));
 +
-+        spans.add(buildPrivacyPolicyLink("3", R.string.auto_updates_wiki_url));
-+
-+        spans.add(buildPrivacyPolicyLink("4", R.string.bromite_updater_privacy_policy_url));
-+
 +        String tosString = getString(R.string.bromite_fre_footer_privacy_policy);
 +
 +        mTosAndPrivacy.setText(SpanApplier.applySpans(tosString, spans.toArray(new SpanInfo[0])));
 +    }
 +
 +    private void updateReportCheckbox() {
-+        mAutoUpdaterCheckBox.setChecked(true);
 +    }
 +
 +    private void onPolicyServiceInitialized(boolean onDevicePolicyFound) {
@@ -819,11 +797,6 @@ new file mode 100644
 +    private void onTosButtonClicked() {
 +        mTosButtonClicked = true;
 +        mTosAcceptedTime = SystemClock.elapsedRealtime();
-+
-+        // save updater configuration only on button click
-+        SharedPreferences.Editor sharedPreferenceEditor = OmahaBase.getSharedPreferences().edit();
-+        sharedPreferenceEditor.putBoolean(OmahaBase.PREF_ALLOW_INLINE_UPDATE, mAutoUpdaterChecked);
-+        sharedPreferenceEditor.apply();
 +
 +        tryMarkTermsAccepted(true);
 +    }
@@ -890,7 +863,6 @@ new file mode 100644
 +
 +        mAcceptButton.setVisibility(visibility);
 +        mTosAndPrivacy.setVisibility(visibility);
-+        mAutoUpdaterCheckBox.setVisibility(visibility);
 +    }
 +
 +    protected View getToSAndPrivacyText() {
@@ -1259,7 +1231,7 @@ diff --git a/chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/L
 --- a/chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/LocaleManagerDelegate.java
 +++ b/chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/LocaleManagerDelegate.java
 @@ -331,8 +331,9 @@ public class LocaleManagerDelegate {
- 
+
      /** @see LocaleManager#getSearchEnginesForPromoDialog  */
      public List<TemplateUrl> getSearchEnginesForPromoDialog(@SearchEnginePromoType int promoType) {
 -        throw new IllegalStateException(
@@ -1268,12 +1240,12 @@ diff --git a/chrome/browser/locale/java/src/org/chromium/chrome/browser/locale/L
 +            TemplateUrlServiceFactory.getForProfile(ProfileManager.getLastUsedRegularProfile());
 +        return templateUrlService.getTemplateUrls();
      }
- 
+
      /** @see LocaleManager#onUserSearchEngineChoice */
 diff --git a/chrome/browser/ui/android/strings/android_chrome_strings.grd b/chrome/browser/ui/android/strings/android_chrome_strings.grd
 --- a/chrome/browser/ui/android/strings/android_chrome_strings.grd
 +++ b/chrome/browser/ui/android/strings/android_chrome_strings.grd
-@@ -3198,7 +3198,29 @@ To change this setting, <ph name="BEGIN_LINK">BEGIN_LINK</ph>clear the Chrome da
+@@ -3198,7 +3198,22 @@ To change this setting, <ph name="BEGIN_LINK">BEGIN_LINK</ph>clear the Chrome da
          <ph name="APP_NAME">%1$s<ex>Google Maps</ex></ph> will open in Chrome. By continuing, you agree to the <ph name="BEGIN_LINK1">&lt;LINK1&gt;</ph>Google Terms of Service<ph name="END_LINK1">&lt;/LINK1&gt;</ph>, and the <ph name="BEGIN_LINK2">&lt;LINK2&gt;</ph>Google Chrome and ChromeOS Additional Terms of Service<ph name="END_LINK2">&lt;/LINK2&gt;</ph>. The <ph name="BEGIN_LINK3">&lt;LINK3&gt;</ph>Privacy Policy<ph name="END_LINK3">&lt;/LINK3&gt;</ph> also applies.
        </message>
        <message name="IDS_FRE_ACCEPT_CONTINUE" desc="Text for first page accept and continue button [CHAR_LIMIT=20]">
@@ -1283,15 +1255,8 @@ diff --git a/chrome/browser/ui/android/strings/android_chrome_strings.grd b/chro
 +      <message name="IDS_ADBLOCK_UPDATER_PRIVACY_POLICY_URL" desc="URL for privacy policy for the ad block updater" translateable="false">
 +        https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages
 +      </message>
-+      <message name="IDS_BROMITE_UPDATER_PRIVACY_POLICY_URL" desc="URL for privacy policy for the Bromite auto updater" translateable="false">
-+        https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages
-+      </message>
-+      <message name="IDS_BROMITE_FRE_FOOTER_PRIVACY_POLICY" desc="Message explaining the privacy policy of the file hosting service provider for adblock updates and Bromite app automatic updates">
-+        <ph name="BEGIN_PRIVACY_LINK1">&lt;PRIVACY_LINK1&gt;</ph>Automatic ad block filters updates<ph name="END_PRIVACY_LINK1">&lt;/PRIVACY_LINK1&gt;</ph> are subject to the <ph name="BEGIN_PRIVACY_LINK2">&lt;PRIVACY_LINK2&gt;</ph>GitHub Privacy statement<ph name="END_PRIVACY_LINK2">&lt;/PRIVACY_LINK2&gt;</ph>; they cannot be disabled.
-+        The following checkbox controls instead <ph name="BEGIN_PRIVACY_LINK3">&lt;PRIVACY_LINK3&gt;</ph>automatic app updates<ph name="END_PRIVACY_LINK3">&lt;/PRIVACY_LINK3&gt;</ph> which are also subject to the <ph name="BEGIN_PRIVACY_LINK4">&lt;PRIVACY_LINK4&gt;</ph>GitHub Privacy statement<ph name="END_PRIVACY_LINK4">&lt;/PRIVACY_LINK4&gt;</ph>.
-+      </message>
-+      <message name="IDS_AUTO_UPDATER_CHECK" desc="Message for the checkbox for automatic Bromite updates">
-+        Automatic checks for Bromite app updates
++      <message name="IDS_BROMITE_FRE_FOOTER_PRIVACY_POLICY" desc="Message explaining the privacy policy of the file hosting service provider for adblock updates">
++        <ph name="BEGIN_PRIVACY_LINK1">&lt;PRIVACY_LINK1&gt;</ph>Automatic ad block filters updates<ph name="END_PRIVACY_LINK1">&lt;/PRIVACY_LINK1&gt;</ph> are subject to the <ph name="BEGIN_PRIVACY_LINK2">&lt;PRIVACY_LINK2&gt;</ph>GitHub Privacy statement<ph name="END_PRIVACY_LINK2">&lt;/PRIVACY_LINK2&gt;</ph>.
 +      </message>
 +      <message name="IDS_UPDATER_PRIVACY_POLICY_URL" desc="URL for GitHub privacy statement" translateable="false">
 +        https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages

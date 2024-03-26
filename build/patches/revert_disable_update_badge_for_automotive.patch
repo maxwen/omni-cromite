@@ -1,0 +1,17 @@
+diff --git a/chrome/android/java/src/org/chromium/chrome/browser/omaha/UpdateStatusProvider.java b/chrome/android/java/src/org/chromium/chrome/browser/omaha/UpdateStatusProvider.java
+index 8194988c68715..b64255eecc666 100644
+--- a/chrome/android/java/src/org/chromium/chrome/browser/omaha/UpdateStatusProvider.java
++++ b/chrome/android/java/src/org/chromium/chrome/browser/omaha/UpdateStatusProvider.java
+@@ -289,11 +287,7 @@ public class UpdateStatusProvider {
+                 status.latestVersion = VersionNumberGetter.getInstance().getLatestKnownVersion();
+
+                 boolean allowedToUpdate =
+-                        checkForSufficientStorage()
+-                                // Disable the version update check for automotive. See b/297925838.
+-                                && !BuildInfo.getInstance().isAutomotive
+-                                && PackageUtils.isPackageInstalled(
+-                                        GooglePlayServicesUtil.GOOGLE_PLAY_STORE_PACKAGE);
++                        checkForSufficientStorage();
+                 status.updateState =
+                         allowedToUpdate ? UpdateState.UPDATE_AVAILABLE : UpdateState.NONE;
+
