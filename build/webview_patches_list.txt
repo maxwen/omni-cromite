@@ -1,0 +1,12 @@
+0001-Add-support-for-getting-updates-for-theme-color-chan.patch
+0003-webview-Hard-no-to-persistent-histograms.patch
+0004-disable-autofill-server-communication-by-default.patch
+0005-webview-Disable-autofill-metadata-uploads-by-default.patch
+0006-disable-WebView-variations-support.patch
+0007-disable-component-updater-pings-by-default.patch
+0008-Revert-Android-Delete-monochrome_android_manifest_te.patch
+0009-Revert-Allow-uses-library-android.ext.adservices.patch
+0010-bromite-build-utils.patch
+0011-Add-cromite-flags-support.patch
+0012-Disable-conversion-measurement-api.patch
+
